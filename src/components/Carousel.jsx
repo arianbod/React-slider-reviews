@@ -1,22 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { shortList, list, longList } from '../data';
 import { FaQuoteRight } from 'react-icons/fa';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 const Carousel = () => {
-	const [peopleState, setPeopleState] = useState(shortList);
+	const [peopleState, setPeopleState] = useState(longList);
+	const [activeState, setActiveState] = useState(0);
 	const prevSlide = () => {
-		setPeopleState();
+		setActiveState(activeState > 0 ? activeState - 1 : 0);
 	};
 	const nextSlide = () => {
-		setPeopleState();
+		// setActiveState(activeState < peopleState.length - 1 ? activeState + 1 : 0);
+		setActiveState((oldValue) => {
+			console.log(oldValue);
+			const result = (oldValue + 1) % peopleState.length;
+			return result;
+		});
 	};
+	useEffect(() => {
+		let sliderId = setInterval(() => {
+			nextSlide();
+		}, 2000);
+		return () => {
+			clearInterval(sliderId);
+		};
+	}, [activeState]);
+
 	return (
 		<section className='slider-container'>
-			{peopleState.map((person) => {
+			{peopleState.map((person, personIndex) => {
 				const { id, image, name, title, quote } = person;
 				return (
 					<article
 						className='slide'
+						style={{
+							transform: `translateX(${100 * (personIndex - activeState)}%)`,
+							opacity: personIndex === activeState ? 1 : 0,
+							visibility: personIndex === activeState ? 'visible' : 'hidden',
+						}}
 						key={id}>
 						<img
 							src={image}
@@ -25,7 +45,7 @@ const Carousel = () => {
 						/>
 						<h5 className='name'>{name}</h5>
 						<p className='title'>{title}</p>
-						<p className='quote'>{quote}</p>
+						<p className='text'>{quote}</p>
 						<FaQuoteRight className='icon' />
 					</article>
 				);
