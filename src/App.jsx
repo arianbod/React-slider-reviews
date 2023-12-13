@@ -1,9 +1,12 @@
 import Carousel from './components/Carousel';
-
+import CarouselThroughLib from './components/CarouselThroughLib';
 const App = () => {
 	return (
 		<main>
-			<Carousel />
+		<sdasd/>
+			{/* <Carousel /> */}
+			<CarouselThroughLib />
+			
 		</main>
 	);
 };
